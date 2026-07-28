@@ -24,7 +24,7 @@ function verifyPassword(password, storedPassword) {
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://mcq-backend-tau.vercel.app'], // Allow requests from React frontend
+  origin: ['http://localhost:3000', 'https://mcq-s-beta.vercel.app', 'https://mcq-backend-tau.vercel.app'], // Allow requests from local and production frontends
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
