@@ -35,7 +35,7 @@ app.use((req, res, next) => {
   if (req.header('content-type') === 'text/plain' && typeof req.body === 'string') {
     try {
       req.body = JSON.parse(req.body);
-    } catch (e) {}
+    } catch (e) { }
   }
   next();
 });
@@ -249,7 +249,7 @@ app.post('/api/auth/guest-cleanup', async (req, res) => {
       try {
         const parsed = JSON.parse(req.body);
         userId = parsed.userId;
-      } catch (err) {}
+      } catch (err) { }
     }
 
     if (!userId) {
@@ -291,7 +291,7 @@ app.post('/api/history', authenticate, async (req, res) => {
     if (!id || !query || !questions) {
       return res.status(400).json({ error: 'Missing required quiz fields' });
     }
-    
+
     // Check if quiz already exists
     const existing = await Quiz.findOne({ id });
     if (existing) {
@@ -372,6 +372,151 @@ app.delete('/api/history/:id', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Failed to delete quiz' });
   }
 });
+
+// Status page for backend root
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>MCQ Studio Backend Status</title>
+      <style>
+        body {
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+          color: #f1f5f9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        }
+        .container {
+          background: rgba(30, 41, 59, 0.7);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+          border-radius: 24px;
+          padding: 40px;
+          text-align: center;
+          max-width: 500px;
+          width: 90%;
+          backdrop-filter: blur(10px);
+        }
+        .logo {
+          font-size: 3.5rem;
+          margin-bottom: 20px;
+          animation: pulse 2s infinite ease-in-out;
+          display: inline-block;
+        }
+        h1 {
+          font-size: 1.8rem;
+          margin: 0 0 10px 0;
+          background: linear-gradient(135deg, #818cf8, #f472b6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .status-badge {
+          display: inline-block;
+          padding: 6px 14px;
+          border-radius: 20px;
+          background: rgba(34, 197, 94, 0.15);
+          border: 1px solid rgba(34, 197, 94, 0.3);
+          color: #4ade80;
+          font-size: 0.85rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 30px;
+        }
+        .endpoints-list {
+          text-align: left;
+          background: rgba(15, 23, 42, 0.5);
+          padding: 20px;
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .endpoints-list h3 {
+          margin-top: 0;
+          font-size: 1rem;
+          color: #94a3b8;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding-bottom: 8px;
+        }
+        .endpoint-item {
+          display: flex;
+          justify-content: space-between;
+          font-family: monospace;
+          font-size: 0.85rem;
+          padding: 6px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .endpoint-item:last-child {
+          border-bottom: none;
+        }
+        .method {
+          font-weight: bold;
+        }
+        .method.post { color: #f43f5e; }
+        .method.get { color: #10b981; }
+        .method.put { color: #f59e0b; }
+        .method.delete { color: #ef4444; }
+        .path { color: #cbd5e1; }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.08); }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="logo">⚡</div>
+        <h1>MCQ Studio Backend</h1>
+        <div class="status-badge">API Running Successfully</div>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
+
+// <div class="endpoints-list">
+//   <h3>Active API Endpoints</h3>
+//   <div class="endpoint-item">
+//     <span class="method post">POST</span>
+//     <span class="path">/api/auth/signup</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method post">POST</span>
+//     <span class="path">/api/auth/login</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method post">POST</span>
+//     <span class="path">/api/auth/guest</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method post">POST</span>
+//     <span class="path">/api/auth/guest-cleanup</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method get">GET</span>
+//     <span class="path">/api/history</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method post">POST</span>
+//     <span class="path">/api/history</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method put">PUT</span>
+//     <span class="path">/api/history/:id</span>
+//   </div>
+//   <div class="endpoint-item">
+//     <span class="method delete">DELETE</span>
+//     <span class="path">/api/history</span>
+//   </div>
+// </div>
 
 // Start the server
 app.listen(PORT, () => {
