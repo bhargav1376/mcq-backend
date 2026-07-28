@@ -59,6 +59,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const User = mongoose.model('User', UserSchema);
+User.syncIndexes().catch(err => console.error('Error syncing User indexes:', err));
 
 const QuestionSchema = new mongoose.Schema({
   question: { type: String, required: true },
@@ -92,6 +93,7 @@ const QuizSchema = new mongoose.Schema({
 QuizSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const Quiz = mongoose.model('Quiz', QuizSchema);
+Quiz.syncIndexes().catch(err => console.error('Error syncing Quiz indexes:', err));
 
 // Middleware to authenticate requests based on a simple Authorization header containing the user ID
 const authenticate = async (req, res, next) => {
